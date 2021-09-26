@@ -1,8 +1,10 @@
-# frozen_string_literal: true
-
 require "docking_station"
 
 describe DockingStation do
+
+  docking_station = DockingStation.new(1)
+  let(:bike) {double("Bike", :working? => true)}
+
   it { is_expected.to respond_to :release_bike }
 
   it "returns a bike object" do
@@ -12,14 +14,12 @@ describe DockingStation do
 
   it { is_expected.to respond_to(:dock).with(1).argument }
 
-  it { is_expected.to respond_to(:bike) }
-
   it "docks a bike in the docking station" do
     bike = Bike.new
     subject.dock(bike)
-    expect(subject.bike).to(eq(bike))
+    expect(subject.dock(bike)).to include bike
   end
-  
+
   it "raises an error if docking station is full" do
     bike = Bike.new
     DockingStation::DEFAULT_CAPACITY.times do
@@ -37,4 +37,19 @@ describe DockingStation do
     expect { subject.release_bike }.to raise_error 'No bikes available'
   end
   
+  it 'has a default capacity' do
+    expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
+  end
+
 end
+
+describe 'initialization' do
+  it 'has a variable capacity' do
+    docking_station = DockingStation.new(50)
+    50.times { docking_station.dock Bike.new }
+    expect{ docking_station.dock Bike.new }.to raise_error 'Docking station full'
+  end
+end
+
+
+
