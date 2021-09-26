@@ -41,6 +41,13 @@ describe DockingStation do
     expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
   end
 
+  it 'can be reported broken' do
+    subject.report_broken
+    # let's use one of RSpec's predicate matchers
+    expect(subject).to be_broken
+  end
+
+
 end
 
 describe 'initialization' do
@@ -50,6 +57,7 @@ describe 'initialization' do
     expect{ docking_station.dock Bike.new }.to raise_error 'Docking station full'
   end
 end
+
 
 
 
